@@ -48,3 +48,4 @@ avgvrand = sum(vrands)/numex
 avgvmin = sum(vmins)/numex
 
 print avgv1, avgvrand, avgvmin
+#results for 100,000 test runs: 0.50062, 0.500857, 0.037804

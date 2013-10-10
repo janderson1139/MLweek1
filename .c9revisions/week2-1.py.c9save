@@ -33,3 +33,6 @@
 {"ts":1381421267440,"patch":[[{"diffs":[[0,"sum(vmins)/numex"],[1,"\n\nprint avgv1, avgvrand, avgvmin"]],"start1":1177,"start2":1177,"length1":16,"length2":48}]],"length":1225,"saved":false}
 {"ts":1381421277371,"patch":[[{"diffs":[[0,"ex = 100"],[-1,"000"],[0,".0\nvmins"]],"start1":939,"start2":939,"length1":19,"length2":16}]],"length":1222,"saved":false}
 {"ts":1381421322385,"patch":[[{"diffs":[[0,"ex = 100"],[1,"000"],[0,".0\nvmins"]],"start1":939,"start2":939,"length1":16,"length2":19}]],"length":1225,"saved":false}
+{"ts":1381425759112,"patch":[[{"diffs":[[0,"x = 1000"],[-1,"00"],[0,".0\nvmins"]],"start1":940,"start2":940,"length1":18,"length2":16}]],"length":1223,"saved":false}
+{"ts":1381425849159,"patch":[[{"diffs":[[0,"x = 1000"],[1,"00"],[0,".0\nvmins"]],"start1":940,"start2":940,"length1":16,"length2":18}]],"length":1225,"saved":false}
+{"ts":1381434390860,"patch":[[{"diffs":[[0,"and, avgvmin"],[1,"\n#results for 100,000 test runs: 0.50062, 0.500857, 0.037804"]],"start1":1213,"start2":1213,"length1":12,"length2":72}]],"length":1285,"saved":false}
