@@ -55,9 +55,43 @@ def signF(xtotest, m, b):
     else:
         return 0
 
+def ga(x1, x2):
+    u = -1 - 0.05*x1 + 0.08*x2 + 0.13*x1*x2 + 1.5*(x1**2) + 1.5*(x2**2)
+    if u >= 0:
+        return 1
+    elif u < 0:
+        return -1
+def gb(x1, x2):
+    u = -1 - 0.05*x1 + 0.08*x2 + 0.13*x1*x2 + 1.5*(x1**2) + 15*(x2**2)
+    if u >= 0:
+        return 1
+    elif u < 0:
+        return -1
 
-def targetFunction(x1,y1,x2,y2,x3,y3):
-    u = (x2-x1)*(y3-y1) - (y2-y1)*(x3-x1)
+def gc(x1, x2):
+    u = -1 - 0.05*x1 + 0.08*x2 + 0.13*x1*x2 + 15*(x1**2) + 1.5*(x2**2)
+    if u >= 0:
+        return 1
+    elif u < 0:
+        return -1
+
+def gd(x1, x2):
+    u = -1 - 1.5*x1 + 0.08*x2 + 0.13*x1*x2 + 0.05*(x1**2) + 0.05*(x2**2)
+    if u >= 0:
+        return 1
+    elif u < 0:
+        return -1
+
+def ge(x1, x2):
+    u = -1 - 0.05*x1 + 0.08*x2 + 1.5*x1*x2 + .15*(x1**2) + 0.15*(x2**2)
+    if u >= 0:
+        return 1
+    elif u < 0:
+        return -1
+
+
+def targetFunction(x1, x2):
+    u = x1 ** 2 + x2 ** 2 - 0.6
     if u >= 0:
         return 1
     elif u < 0:
@@ -88,16 +122,18 @@ def perceptron_training(x1, y1, x2, y2, training_size):
     datapoints = gen_points(training_size)
     ydatapoints = []
     for datapoint in datapoints:
-        yn = targetFunction(x1, y1, x2, y2, datapoint[1], datapoint[2])
+        yn = targetFunction(datapoint[1], datapoint[2])
         ydatapoints.append(yn)
+    random.shuffle(ydatapoints)
+    for num in range(0,len(ydatapoints)/10,1):
+        ydatapoints[num] = -1 * ydatapoints[num]
     ydatapoints = np.asarray(ydatapoints)
 
     w = linalg.lstsq(datapoints, ydatapoints)[0]
-
     #Lets find Ein
     numwrong = 0
     for datapoint in datapoints:
-        yn = targetFunction(x1, y1, x2, y2, datapoint[1], datapoint[2])
+        yn = targetFunction(datapoint[1], datapoint[2])
         gyn = plaG(w, datapoint[1], datapoint[2])
         if yn != gyn:
             numwrong += 1
@@ -106,57 +142,95 @@ def perceptron_training(x1, y1, x2, y2, training_size):
     #lets find Eout
     numverify = 1000
     verifypoints = []
+    yverifypoints = []
     numwrong = 0
     for num in range(1, numverify + 1):
         verifypoints.append((random.uniform(-1, 1), random.uniform(-1, 1)))
+
+        yverifypoints.append(targetFunction(verifypoints[num-1][0], verifypoints[num-1][1]))
+
+    random.shuffle(yverifypoints)
+    for num in range(0, len(yverifypoints)/10, 1):
+        yverifypoints[num] = -1 * yverifypoints[num]
+
+    for num in range(1, numverify + 1):
         datapoint = verifypoints[num - 1]
-        yn = targetFunction(x1, y1, x2, y2, datapoint[0], datapoint[1])
+        yn = yverifypoints[num - 1]
         gyn = plaG(w, datapoint[0], datapoint[1])
 
         if yn != gyn:
             numwrong += 1
     eout = float(numwrong) / numverify
 
+    #ga
+    numwrong = 0
+    for datapoint in datapoints:
+        yn = ga(datapoint[1],datapoint[2])
+        gyn = plaG(w, datapoint[1], datapoint[2])
+        if yn != gyn:
+            numwrong += 1
+    gaerror = float(numwrong) / training_size
 
-    allgood = 0
-    numberIterations = 0
-    while allgood != 1:
-        random.shuffle(datapoints)
+    #gb
+    numwrong = 0
+    for datapoint in datapoints:
+        yn = gb(datapoint[1],datapoint[2])
+        gyn = plaG(w, datapoint[1], datapoint[2])
+        if yn != gyn:
+            numwrong += 1
+    gberror = float(numwrong) / training_size
 
-        allgood = 1
-        for datapoint in datapoints:
-            yn = targetFunction(x1, y1, x2, y2, datapoint[1], datapoint[2])
-            gyn = plaG(w, datapoint[1], datapoint[2])
-            #print ("iteration %s: yn = %s , Gyn = %s") % (numberIterations, yn, gyn)
+    #gc
+    numwrong = 0
+    for datapoint in datapoints:
+        yn = gc(datapoint[1],datapoint[2])
+        gyn = plaG(w, datapoint[1], datapoint[2])
+        if yn != gyn:
+            numwrong += 1
+    gcerror = float(numwrong) / training_size
 
-            if (yn != gyn):
-                numberIterations += 1
-                allgood = 0
-                w[0] += yn * 1
-                w[1] += yn * datapoint[1]
-                w[2] += yn * datapoint[2]
-                break
-    #Ein Section
+    #gd
+    numwrong = 0
+    for datapoint in datapoints:
+        yn = gd(datapoint[1],datapoint[2])
+        gyn = plaG(w, datapoint[1], datapoint[2])
+        if yn != gyn:
+            numwrong += 1
+    gderror = float(numwrong) / training_size
+
+    #ge
+    numwrong = 0
+    for datapoint in datapoints:
+        yn = ge(datapoint[1],datapoint[2])
+        gyn = plaG(w, datapoint[1], datapoint[2])
+        if yn != gyn:
+            numwrong += 1
+    geerror = float(numwrong) / training_size
 
     #return (int (random.gauss(100, 10)), random.random() / training_size)
-    return ein, eout, numberIterations
+    return gaerror, gberror, gcerror, gderror, geerror
 
 
 tests = 1000
-points = 10
+points = 1000
 
 # Repeat the experiment n times (tests parameter) and store the result of each experiment in one line of the output table
-totalEin = 0
-totalEout = 0
-totalNumIterations = 0
+totala = 0
+totalb = 0
+totalc = 0
+totald = 0
+totale = 0
 for t in range(1, tests + 1):
     x1 = random.uniform(-1, 1)
     y1 = random.uniform(-1, 1)
     x2 = random.uniform(-1, 1)
     y2 = random.uniform(-1, 1)
-    Ein, Eout, NumIterations = perceptron_training(x1, y1, x2, y2, points)
-    totalEin += Ein
-    totalEout += Eout
-    totalNumIterations += NumIterations
+    a,b,c,d,e = perceptron_training(x1, y1, x2, y2, points)
+    totala+= a
+    totalb+=b
+    totalc+=c
+    totald+=d
+    totale+=e
 
-print "Average Ein: %s Average Eout: %s Average Iterations: %s" % ((totalEin/tests), (totalEout/tests), (totalNumIterations*1.0/tests))
+
+print totala/tests, totalb/tests, totalc/tests, totald/tests, totale/tests
